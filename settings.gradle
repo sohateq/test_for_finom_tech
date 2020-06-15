@@ -1,0 +1,2 @@
+rootProject.name='Test for Finom Tech'
+include ':app'
