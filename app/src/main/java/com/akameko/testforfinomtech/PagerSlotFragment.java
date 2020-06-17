@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +41,14 @@ public class PagerSlotFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_pager_slot, container, false);
         currencyName = root.findViewById(R.id.text_view_currency_name_slot);
-        currencyRate= root.findViewById(R.id.text_view_currency_rate_slot);
-        currencyCount= root.findViewById(R.id.text_view_currency_count_slot);
-        currencyEditText= root.findViewById(R.id.edit_text_currency_slot);
+        currencyRate = root.findViewById(R.id.text_view_currency_rate_slot);
+        currencyCount = root.findViewById(R.id.text_view_currency_count_slot);
+        currencyEditText = root.findViewById(R.id.edit_text_currency_slot);
 
         currencyName.setText(pagerItem.getCurrencyName());
         currencyRate.setText(pagerItem.getCurrencyRate().toString());
@@ -62,7 +62,9 @@ public class PagerSlotFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                EventBus.getDefault().postSticky(new EventEnter("Hello everyone!", s.toString()));
+                if (currencyEditText.isFocused()) {
+                    EventBus.getDefault().postSticky(new EventEnter(currencyName.getText().toString(), s.toString()));
+                }
             }
 
             @Override
@@ -82,10 +84,20 @@ public class PagerSlotFragment extends Fragment {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventEnter event) {
-        //Toast.makeText(getActivity(), event.message, Toast.LENGTH_SHORT).show();
-        if (!event.getCalculateCount().equals("")){
-            currencyCount.setText(event.getCalculateCount());
+
+
+        currencyCount.setText(event.getCalculateCount());
+        if (!currencyEditText.isFocused()) {
+            //Log.d("123", "here");
+            if (!event.getCalculateCount().equals("")) {
+                Double numberToShow = ((MainActivity) getActivity()).presenter.convert(event.getCurrencyName(), currencyName.getText().toString(), Double.parseDouble(event.getCalculateCount()));
+                Log.d("123", event.getCurrencyName() + currencyName.getText().toString() + event.getCalculateCount());
+                currencyEditText.setText(numberToShow.toString());
+            } else{
+                currencyEditText.setText("");
+            }
         }
+
     }
 
     @Override

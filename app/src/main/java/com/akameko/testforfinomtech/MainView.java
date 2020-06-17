@@ -10,6 +10,6 @@ import moxy.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(value = AddToEndSingleStrategy.class)
 public interface MainView extends MvpView {
-    void setRates(Double USD, List<PagerItem> pagerItems);
+    void createViewPagers(List<PagerItem> pagerItems);
 
 }

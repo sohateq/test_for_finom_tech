@@ -26,6 +26,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private Double EURcount = 100d;
     private Double GBPcount = 100d;
 
+    private Double USDrate;
+    private Double EURrate;
+    private Double GBPrate;
+
 
     @Override
     protected void onFirstViewAttach() {
@@ -39,7 +43,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .subscribe(latest -> {
 
                     USD = latest.getRates().getUSD();
-                    getViewState().setRates(USD, buildPagerItems(latest));
+                    setRates(latest.getRates().getUSD(), 1d, latest.getRates().getGBP());
+                    getViewState().createViewPagers(buildPagerItems(latest));
 
                     Log.d("123", latest.getRates().toString());
                     Log.d("123", "Rates loaded!!");
@@ -52,9 +57,57 @@ public class MainPresenter extends MvpPresenter<MainView> {
         compositeDisposable.add(disposable);
     }
 
-    public double calculateUSD(Double EUR) {
-        return (EUR * USD);
 
+    private void setRates(Double USDrate, Double EURrate, Double GBPrate) {
+        this.USDrate = USDrate;
+        this.EURrate = EURrate;
+        this.GBPrate = GBPrate;
+    }
+
+    public Double convert(String currencyNameToConvert, String currencyNameToGet, Double currencyToConvertCount) {
+        Double currencyToGetCount = 0d;
+
+        if (currencyNameToConvert.equals("USD")) {
+            switch (currencyNameToGet) {
+                case "USD":
+                    currencyToGetCount = currencyToConvertCount;
+                    break;
+                case "EUR":
+                    currencyToGetCount = currencyToConvertCount * USDrate;
+                    break;
+                case "GBP":
+                    currencyToGetCount = currencyToConvertCount * USDrate / GBPrate;
+                    break;
+            }
+        }
+        if (currencyNameToConvert.equals("EUR")) {
+            switch (currencyNameToGet) {
+                case "USD":
+                    currencyToGetCount = currencyToConvertCount / USDrate;
+                    break;
+                case "EUR":
+                    currencyToGetCount = currencyToConvertCount;
+                    break;
+                case "GBP":
+                    currencyToGetCount = currencyToConvertCount / GBPrate;
+                    break;
+            }
+        }
+        if (currencyNameToConvert.equals("GBP")) {
+            switch (currencyNameToGet) {
+                case "USD":
+                    currencyToGetCount = currencyToConvertCount * GBPrate / USDrate;
+                    break;
+                case "EUR":
+                    currencyToGetCount = currencyToConvertCount * GBPrate;
+                    break;
+                case "GBP":
+                    currencyToGetCount = currencyToConvertCount;
+                    break;
+            }
+        }
+
+        return currencyToGetCount;
     }
 
     private List<PagerItem> buildPagerItems(Latest latest) {

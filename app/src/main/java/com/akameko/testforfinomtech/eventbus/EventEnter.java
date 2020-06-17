@@ -2,8 +2,8 @@ package com.akameko.testforfinomtech.eventbus;
 
 public class EventEnter {
 
-    public final String currencyName;
-    public final String calculateCount;
+    private final String currencyName;
+    private final String calculateCount;
 
 
     public EventEnter(String currencyName, String calculateCount) {

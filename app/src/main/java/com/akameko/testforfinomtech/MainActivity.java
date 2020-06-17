@@ -22,8 +22,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     ViewPager2 viewPagerMain;
     ViewPager2 viewPagerSecond;
-    //Double USD = 0d;
-    // Repository repository = new Repository();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +42,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
     @Override
-    public void setRates(Double USD, List<PagerItem> pagerItems) {
-        //this.USD = USD;
-        //editTextUSDRate.setText("USD: " + USD.toString());
+    public void createViewPagers(List<PagerItem> pagerItems) {
 
-//        PagerAdapter pagerAdapter = new PagerAdapter(pagerItems);
-//        viewPagerMain.setAdapter(pagerAdapter);
-//        viewPagerSecond.setAdapter(pagerAdapter);
         FragmentManager fm = getSupportFragmentManager();
         ViewPagerFragmentAdapter viewPagerFragmentAdapterMain = new ViewPagerFragmentAdapter(fm, getLifecycle());
         PagerSlotFragment pagerSlotFragment0 = new PagerSlotFragment(pagerItems.get(0));
@@ -69,8 +63,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         viewPagerFragmentAdapterSecond.addFragment(pagerSlotFragmentSecond2);
         viewPagerSecond.setAdapter(viewPagerFragmentAdapterSecond);
 
-        //viewPagerSecond.setAdapter(viewPagerFragmentAdapterMain);
-        //Observable.f
+
     }
 
 
