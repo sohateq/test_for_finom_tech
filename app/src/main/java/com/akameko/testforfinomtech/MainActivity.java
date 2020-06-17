@@ -3,6 +3,7 @@ package com.akameko.testforfinomtech;
 import android.os.Bundle;
 import android.widget.EditText;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.akameko.testforfinomtech.repository.PagerItem;
@@ -22,7 +23,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     ViewPager2 viewPagerMain;
     ViewPager2 viewPagerSecond;
     //Double USD = 0d;
-   // Repository repository = new Repository();
+    // Repository repository = new Repository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,53 +32,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         initViews();
         presenter.init();
 
-//        Disposable disposable = repository.loadRates()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(latest -> {
-//
-//
-//                        Log.d("123", latest.getRates().toString());
-//
-//
-//                    Log.d("123", "Rates loaded!!");
-//
-//
-//                }, throwable -> {
-//                    Log.d("123", "Rates loading failed", throwable);
-//                    //Toast.makeText(this,"load error", Toast.LENGTH_SHORT).show();
-//                });
     }
 
-    private void initViews(){
+    private void initViews() {
 
         viewPagerMain = findViewById(R.id.view_pager_main);
         viewPagerSecond = findViewById(R.id.view_pager_second);
-//        editTextEURRate.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!s.toString().equals("")) {
-//                    Double a = presenter.calculateUSD(Double.parseDouble(s.toString()));
-//                    editTextUSDRate.setText(a.toString());
-//                    //Log.d("123", ":)");
-////                    Double a = Double.parseDouble(s.toString()) * USD;
-////                    editTextUSDRate.setText(a.toString());
-//
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
 
-        //viewPager.set
 
     }
 
@@ -86,18 +47,29 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         //this.USD = USD;
         //editTextUSDRate.setText("USD: " + USD.toString());
 
-        PagerAdapter pagerAdapter = new PagerAdapter(pagerItems);
-        viewPagerMain.setAdapter(pagerAdapter);
-        viewPagerSecond.setAdapter(pagerAdapter);
+//        PagerAdapter pagerAdapter = new PagerAdapter(pagerItems);
+//        viewPagerMain.setAdapter(pagerAdapter);
+//        viewPagerSecond.setAdapter(pagerAdapter);
+        FragmentManager fm = getSupportFragmentManager();
+        ViewPagerFragmentAdapter viewPagerFragmentAdapterMain = new ViewPagerFragmentAdapter(fm, getLifecycle());
+        PagerSlotFragment pagerSlotFragment0 = new PagerSlotFragment(pagerItems.get(0));
+        PagerSlotFragment pagerSlotFragment1 = new PagerSlotFragment(pagerItems.get(1));
+        PagerSlotFragment pagerSlotFragment2 = new PagerSlotFragment(pagerItems.get(2));
+        viewPagerFragmentAdapterMain.addFragment(pagerSlotFragment0);
+        viewPagerFragmentAdapterMain.addFragment(pagerSlotFragment1);
+        viewPagerFragmentAdapterMain.addFragment(pagerSlotFragment2);
+        viewPagerMain.setAdapter(viewPagerFragmentAdapterMain);
 
-        viewPagerMain.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
+        ViewPagerFragmentAdapter viewPagerFragmentAdapterSecond = new ViewPagerFragmentAdapter(fm, getLifecycle());
+        PagerSlotFragment pagerSlotFragmentSecond0 = new PagerSlotFragment(pagerItems.get(0));
+        PagerSlotFragment pagerSlotFragmentSecond1 = new PagerSlotFragment(pagerItems.get(1));
+        PagerSlotFragment pagerSlotFragmentSecond2 = new PagerSlotFragment(pagerItems.get(2));
+        viewPagerFragmentAdapterSecond.addFragment(pagerSlotFragmentSecond0);
+        viewPagerFragmentAdapterSecond.addFragment(pagerSlotFragmentSecond1);
+        viewPagerFragmentAdapterSecond.addFragment(pagerSlotFragmentSecond2);
+        viewPagerSecond.setAdapter(viewPagerFragmentAdapterSecond);
 
-            }
-        });
-
+        //viewPagerSecond.setAdapter(viewPagerFragmentAdapterMain);
         //Observable.f
     }
 

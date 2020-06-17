@@ -2,6 +2,8 @@ package com.akameko.testforfinomtech;
 
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,14 +60,29 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //                }
 //            }
 //        });
+        currencyEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
 
     public PagerAdapter(List<PagerItem> pagerItems) {
         this.pagerItems = pagerItems;
     }
-    
+
 
     @NonNull
     @Override
@@ -82,6 +99,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         holder.currencyName.setText(pagerItems.get(position).getCurrencyName());
         holder.currencyCount.setText("We have: " + pagerItems.get(position).getCurrencyCount());
+
         //holder.currencyRate.setText("1EUR = " + pagerItems.get(position).getCurrencyRate());
 
 
