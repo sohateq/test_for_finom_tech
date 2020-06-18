@@ -41,6 +41,7 @@ public class PagerSlotFragment extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,12 +87,12 @@ public class PagerSlotFragment extends Fragment {
     public void onMessageEvent(EventEnter event) {
 
 
-        currencyCount.setText(event.getCalculateCount());
+        //currencyCount.setText(event.getCalculateCount());
         if (!currencyEditText.isFocused()) {
-            //Log.d("123", "here");
+
             if (!event.getCalculateCount().equals("")) {
                 Double numberToShow = ((MainActivity) getActivity()).presenter.convert(event.getCurrencyName(), currencyName.getText().toString(), Double.parseDouble(event.getCalculateCount()));
-                Log.d("123", event.getCurrencyName() + currencyName.getText().toString() + event.getCalculateCount());
+                //Log.d("123", event.getCurrencyName() + currencyName.getText().toString() + event.getCalculateCount());
                 currencyEditText.setText(numberToShow.toString());
             } else{
                 currencyEditText.setText("");
@@ -101,9 +102,17 @@ public class PagerSlotFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
+    }
 
+    public String getCurrencyName() {
+        return currencyName.getText().toString();
+    }
+
+    public Double getCurrencyCount() {
+        if (currencyEditText.getText().toString().equals("")) return 0d;
+        return  Double.parseDouble(currencyEditText.getText().toString());
     }
 }

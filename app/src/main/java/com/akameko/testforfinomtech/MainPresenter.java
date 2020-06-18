@@ -21,7 +21,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     Repository repository = new Repository();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private Double USD;
+
     private Double USDcount = 100d;
     private Double EURcount = 100d;
     private Double GBPcount = 100d;
@@ -42,7 +42,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(latest -> {
 
-                    USD = latest.getRates().getUSD();
+
                     setRates(latest.getRates().getUSD(), 1d, latest.getRates().getGBP());
                     getViewState().createViewPagers(buildPagerItems(latest));
 
@@ -65,6 +65,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public Double convert(String currencyNameToConvert, String currencyNameToGet, Double currencyToConvertCount) {
+        //конвертер валют базовый
         Double currencyToGetCount = 0d;
 
         if (currencyNameToConvert.equals("USD")) {
@@ -110,12 +111,63 @@ public class MainPresenter extends MvpPresenter<MainView> {
         return currencyToGetCount;
     }
 
+    public Boolean exchange(String currencyNameToSpend, Double currencyToSpendCount, String currencyNameToGet, Double currencyToGetCount) {
+        //обменник валют базовый
+
+
+        if (currencyNameToSpend.equals(currencyNameToGet)) return false;
+        if (currencyNameToSpend.equals("USD") && currencyToSpendCount > USDcount) return false;
+        if (currencyNameToSpend.equals("EUR") && currencyToSpendCount > EURcount) return false;
+        if (currencyNameToSpend.equals("GBP") && currencyToSpendCount > GBPcount) return false;
+
+        addMoney(currencyNameToGet, currencyToGetCount);
+        spendMoney(currencyNameToSpend, currencyToSpendCount);
+
+        Log.d("123", "USDcount: " + USDcount);
+        Log.d("123", "EURcount: " + EURcount);
+        Log.d("123", "GBPcount: " + GBPcount);
+
+        return true;
+    }
+
+    private void addMoney(String moneyName, Double moneyCount) {
+        switch (moneyName) {
+            case "USD":
+                USDcount = USDcount + moneyCount;
+                break;
+            case "EUR":
+                EURcount = EURcount + moneyCount;
+                break;
+            case "GBP":
+                GBPcount = GBPcount + moneyCount;
+                break;
+        }
+    }
+
+    private void spendMoney(String moneyName, Double moneyCount) {
+        switch (moneyName) {
+            case "USD":
+                USDcount = USDcount - moneyCount;
+                break;
+            case "EUR":
+                EURcount = EURcount - moneyCount;
+                break;
+            case "GBP":
+                GBPcount = GBPcount - moneyCount;
+                break;
+        }
+    }
+
     private List<PagerItem> buildPagerItems(Latest latest) {
         List<PagerItem> pagerItemList = new ArrayList<>();
         pagerItemList.add(new PagerItem("USD", latest.getRates().getUSD(), USDcount));
         pagerItemList.add(new PagerItem("EUR", 1d, EURcount));
         pagerItemList.add(new PagerItem("GBP", latest.getRates().getGBP(), GBPcount));
         return pagerItemList;
+    }
+
+    public void destroy() {
+        compositeDisposable.dispose();
     }
 
 }
