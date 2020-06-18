@@ -65,7 +65,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public Double convert(String currencyNameToConvert, String currencyNameToGet, Double currencyToConvertCount) {
-        //конвертер валют базовый
+        //конвертер валют сомнительной читабельности
         Double currencyToGetCount = 0d;
 
         if (currencyNameToConvert.equals("USD")) {
@@ -112,7 +112,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public Boolean exchange(String currencyNameToSpend, Double currencyToSpendCount, String currencyNameToGet, Double currencyToGetCount) {
-        //обменник валют базовый
+        //обменник валют
 
 
         if (currencyNameToSpend.equals(currencyNameToGet)) return false;
@@ -126,6 +126,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
         Log.d("123", "USDcount: " + USDcount);
         Log.d("123", "EURcount: " + EURcount);
         Log.d("123", "GBPcount: " + GBPcount);
+
+        getViewState().walletUpdateNotify(USDcount, EURcount, GBPcount);
 
         return true;
     }

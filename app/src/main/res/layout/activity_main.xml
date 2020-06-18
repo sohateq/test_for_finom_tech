@@ -6,17 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/text_view_spend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="ПРОДАТЬ:"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
+
 
     <androidx.viewpager2.widget.ViewPager2
-    android:id="@+id/view_pager_main"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:orientation="horizontal"
-    app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/view_pager_main"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_spend"
 
-    />
+        />
+
+    <TextView
+        android:id="@+id/text_view_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="КУПИТЬ:"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_pager_main">
+
+    </TextView>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_second"
@@ -25,7 +55,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager_main"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_get"
 
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

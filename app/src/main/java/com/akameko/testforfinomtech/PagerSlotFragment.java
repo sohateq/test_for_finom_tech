@@ -1,45 +1,37 @@
 package com.akameko.testforfinomtech;
 
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.akameko.testforfinomtech.eventbus.EventEnter;
+import com.akameko.testforfinomtech.eventbus.EventWalletUpdate;
 import com.akameko.testforfinomtech.repository.PagerItem;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PagerSlotFragment extends Fragment {
 
     PagerItem pagerItem;
     private TextView currencyName;
     private TextView currencyRate;
     private TextView currencyCount;
-
     private EditText currencyEditText;
 
     public PagerSlotFragment(PagerItem pagerItem) {
         this.pagerItem = pagerItem;
     }
-
 
 
     @Override
@@ -52,8 +44,8 @@ public class PagerSlotFragment extends Fragment {
         currencyEditText = root.findViewById(R.id.edit_text_currency_slot);
 
         currencyName.setText(pagerItem.getCurrencyName());
-        currencyRate.setText(pagerItem.getCurrencyRate().toString());
-        currencyCount.setText(pagerItem.getCurrencyCount().toString());
+        currencyRate.setText("1EUR = " + pagerItem.getCurrencyRate().toString() + pagerItem.getCurrencyName());
+        currencyCount.setText(String.format(Locale.US, "We have: %.2f", pagerItem.getCurrencyCount()));
 
         currencyEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,12 +85,20 @@ public class PagerSlotFragment extends Fragment {
             if (!event.getCalculateCount().equals("")) {
                 Double numberToShow = ((MainActivity) getActivity()).presenter.convert(event.getCurrencyName(), currencyName.getText().toString(), Double.parseDouble(event.getCalculateCount()));
                 //Log.d("123", event.getCurrencyName() + currencyName.getText().toString() + event.getCalculateCount());
-                currencyEditText.setText(numberToShow.toString());
-            } else{
+                //currencyEditText.setText(numberToShow.toString());
+                currencyEditText.setText(String.format(Locale.US, "%.2f", numberToShow));
+            } else {
                 currencyEditText.setText("");
             }
         }
 
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onUpdateEvent(EventWalletUpdate event) {
+        //currencyCount.setText("We have: " +  event.getCurrencyCount(currencyName.getText().toString()));
+        currencyCount.setText(String.format(Locale.US, "We have: %.2f", event.getCurrencyCount(currencyName.getText().toString())));
+        currencyEditText.setText("");
     }
 
     @Override
@@ -113,6 +113,6 @@ public class PagerSlotFragment extends Fragment {
 
     public Double getCurrencyCount() {
         if (currencyEditText.getText().toString().equals("")) return 0d;
-        return  Double.parseDouble(currencyEditText.getText().toString());
+        return Double.parseDouble(currencyEditText.getText().toString());
     }
 }

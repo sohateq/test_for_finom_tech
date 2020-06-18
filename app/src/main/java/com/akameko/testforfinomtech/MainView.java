@@ -11,5 +11,6 @@ import moxy.viewstate.strategy.StateStrategyType;
 @StateStrategyType(value = AddToEndSingleStrategy.class)
 public interface MainView extends MvpView {
     void createViewPagers(List<PagerItem> pagerItems);
+    void walletUpdateNotify(Double USDcount,Double EURcount,Double GBPcount);
 
 }

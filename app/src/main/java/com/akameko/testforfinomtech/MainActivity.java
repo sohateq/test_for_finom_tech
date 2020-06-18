@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.akameko.testforfinomtech.eventbus.EventWalletUpdate;
 import com.akameko.testforfinomtech.repository.PagerItem;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +39,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         setContentView(R.layout.activity_main);
         initViews();
         presenter.init();
-
     }
 
     private void initViews() {
-
         viewPagerMain = findViewById(R.id.view_pager_main);
         viewPagerSecond = findViewById(R.id.view_pager_second);
-
-
     }
 
     @Override
@@ -81,9 +81,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         fragmentsSecondList.add(pagerSlotFragmentSecond2);
 
         viewPagerSecond.setAdapter(viewPagerFragmentAdapterSecond);
+    }
 
-
-
+    @Override
+    public void walletUpdateNotify(Double USDcount, Double EURcount, Double GBPcount) {
+        EventBus.getDefault().postSticky(new EventWalletUpdate(USDcount, EURcount, GBPcount));
     }
 
     @Override
@@ -105,9 +107,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 //                Log.d("123", "currencyToSpendCount" + currencyToSpendCount.toString());
 //                Log.d("123", "currencyNameToGet: " + currencyNameToGet);
 //                Log.d("123", "currencyToGetCount: " + currencyToGetCount);
-                Boolean test = presenter.exchange(currencyNameToSpend, currencyToSpendCount, currencyNameToGet, currencyToGetCount );
-                Log.d("123", "exchange: " + test.toString());
-
+                Boolean exchangeSuccessful = presenter.exchange(currencyNameToSpend, currencyToSpendCount, currencyNameToGet, currencyToGetCount );
+                Log.d("123", "exchange: " + exchangeSuccessful.toString());
+                if (!exchangeSuccessful) Toast.makeText(this, "Обмен невозможен", Toast.LENGTH_LONG).show();
+                if (exchangeSuccessful) Toast.makeText(this, "Успешно!", Toast.LENGTH_LONG).show();
 
                 return true;
             default:

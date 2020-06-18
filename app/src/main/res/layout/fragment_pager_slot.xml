@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 app:layout_constraintBottom_toBottomOf="@+id/text_view_currency_name_slot"
                 app:layout_constraintEnd_toEndOf="parent" />
 
